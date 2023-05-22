@@ -39,6 +39,7 @@ export class ResizeImageProvider implements IResizeImageProvider {
           .resize(newDimension, 720)
           .write(`src/images/resized/${name}_thumb.${metadata.getExtension()}`);
       }
+
       const newObject: IResizedImageDTO = {
         localpath: {
           original: imageUrl,

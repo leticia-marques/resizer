@@ -7,7 +7,6 @@ import {
   IResizeImageProvider,
   RESIZE_IMAGE,
 } from './providers/IResizeImageProvider';
-import { ResizeImageProvider } from './providers/ResizeImageProvider';
 import { IResizedImageDTO } from './dtos/IResizeImageDTO';
 
 @Injectable()
@@ -18,14 +17,16 @@ export class ResizeService {
     private resizeImageProvider: IResizeImageProvider,
   ) {}
 
-  async create(createImageDto: IRequestDTO): Promise<IResizedImageDTO> {
+  async resize(createImageDto: IRequestDTO): Promise<IResizedImageDTO> {
     const imageResizedData = await this.resizeImageProvider.resize(
       createImageDto.image,
       createImageDto.compress,
     );
+
     const newImage = new this.imageModel({
       metadata: imageResizedData.metadadata,
     });
+
     newImage.save();
     return imageResizedData;
   }
