@@ -10,7 +10,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - ./desafio_backend:/app
+      - ./desafio_backend:/home
     ports:
       - "8080:8080"
     networks:

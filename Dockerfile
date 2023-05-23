@@ -1,9 +1,10 @@
-FROM node:18
+FROM node:16
 
 WORKDIR /home
-COPY ./desafio_backend/package*.json .
 
-USER node
+COPY ./desafio_backend .
+
+USER root
 
 EXPOSE 8080
 
