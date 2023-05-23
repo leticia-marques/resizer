@@ -1,12 +1,9 @@
-FROM node:16
+FROM node:18
 
 WORKDIR /home
+COPY ./desafio_backend/package*.json .
 
-# RUN useradd -ms /bin/bash admin
-# COPY --chown=admin:admin home /home
-COPY ./desafio_backend .
-
-USER root
+USER node
 
 EXPOSE 8080
 

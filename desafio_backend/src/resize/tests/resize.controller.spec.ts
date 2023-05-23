@@ -34,7 +34,7 @@ describe('Resize controller', () => {
         image: 'example.jpg',
         compress: '5',
       });
-      console.log(newImageData);
+
       expect(resizeService.resize).toBeCalledWith({
         image: 'example.jpg',
         compress: '5',

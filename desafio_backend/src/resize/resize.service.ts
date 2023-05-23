@@ -8,11 +8,13 @@ import {
   RESIZE_IMAGE,
 } from './providers/IResizeImageProvider';
 import { IResizedImageDTO } from './dtos/IResizeImageDTO';
+import { ImageRepository } from './imageMetadata.repository';
 
 @Injectable()
 export class ResizeService {
   constructor(
-    @InjectModel(Image.name) private imageModel: Model<Image>,
+    private readonly metaDataRepository: ImageRepository,
+    // @InjectModel(Image.name) private imageModel: Model<Image>,
     @Inject(RESIZE_IMAGE)
     private resizeImageProvider: IResizeImageProvider,
   ) {}
@@ -23,11 +25,10 @@ export class ResizeService {
       createImageDto.compress,
     );
 
-    const newImage = new this.imageModel({
+    const newImage = await this.metaDataRepository.create({
       metadata: imageResizedData.metadadata,
     });
 
-    newImage.save();
     return imageResizedData;
   }
 }

@@ -4,10 +4,7 @@ import { ResizeController } from './resize/resize.controller';
 import { ImagesModule } from './resize/resize.module';
 
 @Module({
-  imports: [
-    MongooseModule.forRoot('mongodb://mongodb:27017/crud'),
-    ImagesModule,
-  ],
+  imports: [MongooseModule.forRoot(process.env.MONGODB_URL), ImagesModule],
   controllers: [],
   providers: [],
 })

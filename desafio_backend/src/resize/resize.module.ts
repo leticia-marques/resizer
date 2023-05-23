@@ -5,6 +5,7 @@ import { ResizeService } from './resize.service';
 import { Image, ImageSchema } from './entities/image.entity';
 import { ResizeImageProvider } from './providers/ResizeImageProvider';
 import { RESIZE_IMAGE } from './providers/IResizeImageProvider';
+import { ImageRepository } from './imageMetadata.repository';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { RESIZE_IMAGE } from './providers/IResizeImageProvider';
       provide: RESIZE_IMAGE,
     },
     ResizeService,
+    ImageRepository,
   ],
 })
 export class ImagesModule {}
