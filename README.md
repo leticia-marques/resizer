@@ -29,8 +29,10 @@ git clone https://github.com/leticia-marques/resizer.git
 ```
 
 ```bash
+# build the container
+docker-compose up -d
 # Enter the container:
-docker-compose -it desafio bash
+docker exec -it desafio bash
 # Install dependencies:
 npm i
 # Start the tool:
