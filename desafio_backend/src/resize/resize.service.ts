@@ -20,10 +20,11 @@ export class ResizeService {
   ) {}
 
   async resize(createImageDto: IRequestDTO): Promise<IResizedImageDTO> {
-    const imageResizedData = await this.resizeImageProvider.resize(
-      createImageDto.image,
-      createImageDto.compress,
-    );
+    const imageResizedData =
+      await this.resizeImageProvider.resizeImageAndGetData(
+        createImageDto.image,
+        createImageDto.compress,
+      );
 
     const newImage = await this.metaDataRepository.create({
       metadata: imageResizedData.metadadata,

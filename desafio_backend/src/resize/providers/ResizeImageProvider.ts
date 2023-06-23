@@ -4,10 +4,31 @@ import { IResizedImageDTO } from '../dtos/IResizeImageDTO';
 import path = require('path');
 import { HttpException, Injectable } from '@nestjs/common';
 
+interface resizeAndSaveParameters {
+  height: number;
+  width: number;
+  metadata: Jimp;
+  compressionValue: number;
+  name: string;
+}
 @Injectable()
 export class ResizeImageProvider implements IResizeImageProvider {
   resizeImageData: IResizedImageDTO;
-  async resize(
+  resizeAndSaveImage(
+    height: number,
+    width: number,
+    metadata: Jimp,
+    compressionValue: number,
+    name: string,
+  ): void {
+    metadata
+      .write(`src/images/original/${name}.${metadata.getExtension()}`)
+      .quality(compressionValue)
+      .resize(width, height)
+      .write(`src/images/resized/${name}_thumb.${metadata.getExtension()}`);
+  }
+
+  async resizeImageAndGetData(
     imageUrl: string,
     compressionValue: string,
   ): Promise<IResizedImageDTO> {
@@ -34,12 +55,22 @@ export class ResizeImageProvider implements IResizeImageProvider {
         metadata
           .quality(parseFloat(compressionValue))
           .write(`src/images/resized/${name}_thumb.${metadata.getExtension()}`);
+      } else if (width <= height) {
+        this.resizeAndSaveImage(
+          720,
+          newDimension,
+          metadata,
+          parseFloat(compressionValue),
+          name,
+        );
       } else {
-        metadata
-          .write(`src/images/original/${name}.${metadata.getExtension()}`)
-          .quality(parseFloat(compressionValue))
-          .resize(newDimension, 720)
-          .write(`src/images/resized/${name}_thumb.${metadata.getExtension()}`);
+        this.resizeAndSaveImage(
+          newDimension,
+          720,
+          metadata,
+          parseFloat(compressionValue),
+          name,
+        );
       }
 
       const newObject: IResizedImageDTO = {
