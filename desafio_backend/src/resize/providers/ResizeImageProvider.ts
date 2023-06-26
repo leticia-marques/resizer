@@ -73,7 +73,7 @@ export class ResizeImageProvider implements IResizeImageProvider {
         );
       }
 
-      const newObject: IResizedImageDTO = {
+      this.resizeImageData = {
         localpath: {
           original: imageUrl,
           thumb: `images/resized/${name}_thumb.${metadata.getExtension()}`,
@@ -81,7 +81,6 @@ export class ResizeImageProvider implements IResizeImageProvider {
         metadadata: metadata['_exif'],
       };
 
-      this.resizeImageData = newObject;
       return this.resizeImageData;
     } catch (err) {
       throw new HttpException('Failed to resize image', 500);
