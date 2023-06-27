@@ -37,6 +37,8 @@ export class ResizeService {
 
   async getImageById(id: number): Promise<Image> {
     const image = await this.metaDataRepository.getImageById(id);
-    return image['metadata']['tags']['Model'];
+    const meta = image['metadata'][0];
+
+    return meta['tags']['Model'];
   }
 }
