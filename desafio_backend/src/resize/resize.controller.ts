@@ -1,4 +1,4 @@
-import { Body, Controller, HttpException, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Post } from '@nestjs/common';
 import { IRequestDTO } from './dtos/IRequestDTO';
 import { ResizeService } from './resize.service';
 
@@ -22,5 +22,9 @@ export class ResizeController {
     });
 
     return response;
+  }
+  @Get()
+  async getImages() {
+    return await this.resizeImagesService.getImages();
   }
 }

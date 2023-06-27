@@ -32,4 +32,8 @@ export class ResizeService {
 
     return imageResizedData;
   }
+
+  async getImages(): Promise<Image[]> {
+    return await this.metaDataRepository.getImages();
+  }
 }

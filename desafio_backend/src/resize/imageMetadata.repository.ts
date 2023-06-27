@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class ImageRepository extends ImageEntityRepository<ImageDocument> {
+export class ImageRepository extends ImageEntityRepository {
   constructor(@InjectModel(Image.name) imageModel: Model<ImageDocument>) {
     super(imageModel);
   }

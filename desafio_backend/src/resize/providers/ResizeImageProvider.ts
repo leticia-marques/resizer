@@ -32,7 +32,7 @@ export class ResizeImageProvider implements IResizeImageProvider {
     imageUrl: string,
     compressionValue: string,
   ): Promise<IResizedImageDTO> {
-    if (parseFloat(compressionValue) < 0 || parseFloat(compressionValue) > 100)
+    if (parseFloat(compressionValue) < 0 || parseFloat(compressionValue) > 1)
       throw new HttpException('Compress value must be between 0-100', 400);
     try {
       const metadata = await Jimp.read(imageUrl);
@@ -60,7 +60,7 @@ export class ResizeImageProvider implements IResizeImageProvider {
           720,
           newDimension,
           metadata,
-          parseFloat(compressionValue),
+          parseFloat(compressionValue) * 100,
           name,
         );
       } else {
@@ -68,7 +68,7 @@ export class ResizeImageProvider implements IResizeImageProvider {
           newDimension,
           720,
           metadata,
-          parseFloat(compressionValue),
+          parseFloat(compressionValue) * 100,
           name,
         );
       }
