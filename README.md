@@ -31,8 +31,6 @@ git clone https://github.com/leticia-marques/resizer.git
 ```bash
 # build the container
 docker-compose up -d
-# Enter the container:
-docker exec -it desafio bash
 # Install dependencies:
 npm i
 # Start the tool:
@@ -40,10 +38,11 @@ npm run start
 ```
 
 # Making a request
-
+Blue is optional.
 ```json
 {
   "image": "https://assets.storage.trakto.io/AkpvCuxXGMf3npYXajyEZ8A2APn2/0e406885-9d03-4c72-bd92-c6411fbe5c49.jpeg",
-  "compress": "0.9"
+  "compress": 0.9,
+  "blur": 0.50
 }
 ```
