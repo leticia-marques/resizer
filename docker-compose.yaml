@@ -2,19 +2,19 @@ version: "3.6"
 
 
 services:
-  app:
-    build: .
-    container_name: desafio
-    environment:
-      - MONGODB_URL=mongodb://mongodb:27017/desafio
-    stdin_open: true
-    tty: true
-    volumes:
-      - ./desafio_backend:/home
-    ports:
-      - "8000:8000"
-    networks:
-      - app
+  # app:
+  #   build: .
+  #   container_name: desafio
+  #   environment:
+  #     - MONGODB_URL=mongodb://mongodb:27017/desafio
+  #   stdin_open: true
+  #   tty: true
+  #   volumes:
+  #     - ./desafio_backend:/home
+  #   ports:
+  #     - "8000:8000"
+  #   networks:
+  #     - app
 
   mongodb:
     image: mongo:6-jammy

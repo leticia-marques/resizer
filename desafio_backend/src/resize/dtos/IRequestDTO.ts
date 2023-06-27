@@ -1,4 +1,5 @@
 export interface IRequestDTO {
   image: string;
-  compress: string;
+  compress: number;
+  blur?: number;
 }

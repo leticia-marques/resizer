@@ -4,6 +4,7 @@ export const RESIZE_IMAGE = 'RESIZE_IMAGE';
 export interface IResizeImageProvider {
   resizeImageAndGetData(
     imageUrl: string,
-    compressionValue: string,
+    compressionValue: number,
+    blur?: number,
   ): Promise<IResizedImageDTO>;
 }

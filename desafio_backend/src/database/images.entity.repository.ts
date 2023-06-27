@@ -10,6 +10,10 @@ export abstract class ImageEntityRepository {
   }
 
   async getImages(): Promise<Image[]> {
-    return this.imageEntityModel.find();
+    return await this.imageEntityModel.find();
+  }
+
+  async getImageById(id: number): Promise<Image> {
+    return await this.imageEntityModel.findById(id);
   }
 }

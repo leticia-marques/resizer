@@ -4,7 +4,10 @@ import { ResizeController } from './resize/resize.controller';
 import { ImagesModule } from './resize/resize.module';
 
 @Module({
-  imports: [MongooseModule.forRoot(process.env.MONGODB_URL), ImagesModule],
+  imports: [
+    MongooseModule.forRoot('mongodb://localhost:27017/desafio'),
+    ImagesModule,
+  ],
   controllers: [],
   providers: [],
 })

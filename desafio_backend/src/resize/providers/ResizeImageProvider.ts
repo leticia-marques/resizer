@@ -4,13 +4,6 @@ import { IResizedImageDTO } from '../dtos/IResizeImageDTO';
 import path = require('path');
 import { HttpException, Injectable } from '@nestjs/common';
 
-interface resizeAndSaveParameters {
-  height: number;
-  width: number;
-  metadata: Jimp;
-  compressionValue: number;
-  name: string;
-}
 @Injectable()
 export class ResizeImageProvider implements IResizeImageProvider {
   resizeImageData: IResizedImageDTO;
@@ -20,21 +13,37 @@ export class ResizeImageProvider implements IResizeImageProvider {
     metadata: Jimp,
     compressionValue: number,
     name: string,
+    blur: number,
   ): void {
     metadata
       .write(`src/images/original/${name}.${metadata.getExtension()}`)
       .quality(compressionValue)
       .resize(width, height)
+      .blur(blur)
       .write(`src/images/resized/${name}_thumb.${metadata.getExtension()}`);
   }
 
   async resizeImageAndGetData(
     imageUrl: string,
-    compressionValue: string,
+    compressionValue: number,
+    blur?: number,
   ): Promise<IResizedImageDTO> {
-    if (parseFloat(compressionValue) < 0 || parseFloat(compressionValue) > 1)
-      throw new HttpException('Compress value must be between 0-100', 400);
+    if (compressionValue < 0 || compressionValue > 1)
+      throw new HttpException(
+        {
+          errors: [
+            {
+              code: 400,
+              message: 'Compress value must be between 0-1',
+            },
+          ],
+        },
+        400,
+      );
+
     try {
+      blur = blur > 1 || blur < 0 || !blur ? 1 : blur * 100;
+
       const metadata = await Jimp.read(imageUrl);
 
       const name = path.parse(imageUrl).name;
@@ -53,29 +62,32 @@ export class ResizeImageProvider implements IResizeImageProvider {
 
       if (largerDimension < 720) {
         metadata
-          .quality(parseFloat(compressionValue))
+          .quality(compressionValue)
+          .blur(blur)
           .write(`src/images/resized/${name}_thumb.${metadata.getExtension()}`);
       } else if (width <= height) {
         this.resizeAndSaveImage(
           720,
           newDimension,
           metadata,
-          parseFloat(compressionValue) * 100,
+          compressionValue * 100,
           name,
+          blur,
         );
       } else {
         this.resizeAndSaveImage(
           newDimension,
           720,
           metadata,
-          parseFloat(compressionValue) * 100,
+          compressionValue * 100,
           name,
+          blur,
         );
       }
 
       this.resizeImageData = {
         localpath: {
-          original: imageUrl,
+          original: `src/images/original/${name}.${metadata.getExtension()}`,
           thumb: `images/resized/${name}_thumb.${metadata.getExtension()}`,
         },
         metadadata: metadata['_exif'],
@@ -83,7 +95,17 @@ export class ResizeImageProvider implements IResizeImageProvider {
 
       return this.resizeImageData;
     } catch (err) {
-      throw new HttpException('Failed to resize image', 500);
+      throw new HttpException(
+        {
+          errors: [
+            {
+              code: 500,
+              message: 'invalid url',
+            },
+          ],
+        },
+        500,
+      );
     }
   }
 }

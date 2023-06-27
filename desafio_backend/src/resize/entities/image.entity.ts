@@ -13,8 +13,8 @@ export class LocalPath {
 
 @Schema()
 export class Image {
-  @Prop()
-  metadata: [object];
+  @Prop({ type: Object })
+  metadata: object;
 }
 
 export const ImageSchema = SchemaFactory.createForClass(Image);

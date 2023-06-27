@@ -1,7 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Image } from './entities/image.entity';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { IRequestDTO } from './dtos/IRequestDTO';
 import {
   IResizeImageProvider,
@@ -14,7 +12,6 @@ import { ImageRepository } from './imageMetadata.repository';
 export class ResizeService {
   constructor(
     private readonly metaDataRepository: ImageRepository,
-    // @InjectModel(Image.name) private imageModel: Model<Image>,
     @Inject(RESIZE_IMAGE)
     private resizeImageProvider: IResizeImageProvider,
   ) {}
@@ -24,6 +21,7 @@ export class ResizeService {
       await this.resizeImageProvider.resizeImageAndGetData(
         createImageDto.image,
         createImageDto.compress,
+        createImageDto.blur,
       );
 
     const newImage = await this.metaDataRepository.create({
@@ -35,5 +33,10 @@ export class ResizeService {
 
   async getImages(): Promise<Image[]> {
     return await this.metaDataRepository.getImages();
+  }
+
+  async getImageById(id: number): Promise<Image> {
+    const image = await this.metaDataRepository.getImageById(id);
+    return image['metadata']['tags']['Model'];
   }
 }
