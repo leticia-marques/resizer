@@ -37,7 +37,7 @@ npm i
 npm run start
 ```
 
-# Making a request
+# Making a post request "http://localhost:3000/image/save"
 Blue is optional.
 ```json
 {

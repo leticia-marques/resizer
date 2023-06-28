@@ -2,25 +2,40 @@ import * as Jimp from 'jimp';
 import { IResizeImageProvider } from './IResizeImageProvider';
 import { IResizedImageDTO } from '../dtos/IResizeImageDTO';
 import path = require('path');
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { IUPLOAD_PROVIDER, IUploadProvider } from './IUploadProvider';
 
 @Injectable()
 export class ResizeImageProvider implements IResizeImageProvider {
+  constructor(
+    @Inject(IUPLOAD_PROVIDER) private readonly s3upload: IUploadProvider,
+  ) {}
   resizeImageData: IResizedImageDTO;
-  resizeAndSaveImage(
+  async sendToS3(filepath: string, folder: string): Promise<void> {
+    await this.s3upload.save(filepath, folder);
+  }
+
+  async resizeAndSaveImage(
     height: number,
     width: number,
     metadata: Jimp,
     compressionValue: number,
     name: string,
     blur: number,
-  ): void {
+  ): Promise<void> {
+    const extension = metadata.getExtension();
     metadata
-      .write(`src/images/original/${name}.${metadata.getExtension()}`)
+      .write(`src/images/original/${name}.${extension}`)
       .quality(compressionValue)
       .resize(width, height)
       .blur(blur)
-      .write(`src/images/resized/${name}_thumb.${metadata.getExtension()}`);
+      .write(`src/images/resized/${name}_thumb.${extension}`);
+
+    await this.sendToS3(`src/images/original/${name}.${extension}`, 'original');
+    await this.sendToS3(
+      `src/images/resized/${name}_thumb.${extension}`,
+      'resized',
+    );
   }
 
   async resizeImageAndGetData(
@@ -65,8 +80,13 @@ export class ResizeImageProvider implements IResizeImageProvider {
           .quality(compressionValue)
           .blur(blur)
           .write(`src/images/resized/${name}_thumb.${metadata.getExtension()}`);
+
+        await this.sendToS3(
+          `src/images/resized/${name}_thumb.${metadata.getExtension()}`,
+          'resized',
+        );
       } else if (width <= height) {
-        this.resizeAndSaveImage(
+        await this.resizeAndSaveImage(
           720,
           newDimension,
           metadata,
@@ -75,7 +95,7 @@ export class ResizeImageProvider implements IResizeImageProvider {
           blur,
         );
       } else {
-        this.resizeAndSaveImage(
+        await this.resizeAndSaveImage(
           newDimension,
           720,
           metadata,
@@ -92,7 +112,6 @@ export class ResizeImageProvider implements IResizeImageProvider {
         },
         metadadata: metadata['_exif'],
       };
-
       return this.resizeImageData;
     } catch (err) {
       throw new HttpException(
