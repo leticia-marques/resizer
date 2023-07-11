@@ -38,7 +38,7 @@ npm run start
 ```
 
 # Making a post request "http://localhost:3000/image/save"
-Blue is optional.
+Blur is optional.
 ```json
 {
   "image": "https://assets.storage.trakto.io/AkpvCuxXGMf3npYXajyEZ8A2APn2/0e406885-9d03-4c72-bd92-c6411fbe5c49.jpeg",
